@@ -38,7 +38,7 @@ class val UUID is Equatable[UUID]
     end
     _bytes = bytes
 
-  fun tag _hash(hash: HashFn val, namespace: Namespace, data: Array[U8] val,
+  fun tag _hash(fn: HashFn val, namespace: Namespace, data: Array[U8] val,
                 ver: U8): Array[U8] val =>
     let d = recover val
       let d = Array[U8](Size() + data.size())
@@ -46,7 +46,7 @@ class val UUID is Equatable[UUID]
       d.append(data)
       d
     end
-    let bytes = recover hash(d).slice(0, Size()) end
+    let bytes = recover fn(d).slice(0, Size()) end
     try
       bytes(6)? = (bytes(6)? and 0x0f) or (ver << 4)
       bytes(8)? = (bytes(8)? and 0x3f) or 0x80
@@ -107,6 +107,14 @@ class val UUID is Equatable[UUID]
     else
       false
     end
+
+  fun hash(): USize =>
+    let p = _bytes.cpointer()
+    @ponyint_hash_block[USize](p, Size())
+
+  fun hash64(): U64 =>
+    let p = _bytes.cpointer()
+    @ponyint_hash_block64[U64](p, Size())
 
   fun _hex_string(data: Array[U8] val, width: USize = 0): String =>
     var u: U64 = 0

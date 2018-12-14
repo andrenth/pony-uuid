@@ -126,7 +126,7 @@ class iso _TestVersion4 is UnitTest
   fun name(): String => "test uuid v4"
 
   fun apply(h: TestHelper) =>
-    let set = SetIs[uuid.UUID]
+    let set = Set[uuid.UUID]
     for i in Range(0, 1000) do
       let id = uuid.UUID.v4()
       h.assert_false(set.contains(id))
