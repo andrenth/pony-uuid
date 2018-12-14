@@ -133,7 +133,7 @@ class iso _TestVersion4 is UnitTest
       set.set(id)
       match uuid.Parse(id.string())
       | let id': uuid.UUID =>
-        h.assert_eq[String](id.string(), id'.string())
+        h.assert_eq[uuid.UUID](id, id')
         h.assert_eq[uuid.Version](4, id.version())
         h.assert_is[uuid.Variant](uuid.RFC4122, id.variant())
       else

@@ -5,7 +5,7 @@ use "itertools"
 use "random"
 use "time"
 
-class val UUID
+class val UUID is Equatable[UUID]
   let _bytes: Array[U8] val
 
   new val v3(namespace: Namespace, data: Array[U8] val) =>
@@ -94,6 +94,19 @@ class val UUID
     s.push('-')
     s.insert_in_place(24, _hex_string(_bytes.trim(10), 12))
     s
+
+  fun eq(other: UUID): Bool =>
+    let bytes = other.array()
+    try
+      for i in Range(0, Size()) do
+        if _bytes(i)? != bytes(i)? then
+          return false
+        end
+      end
+      true
+    else
+      false
+    end
 
   fun _hex_string(data: Array[U8] val, width: USize = 0): String =>
     var u: U64 = 0
