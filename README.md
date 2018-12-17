@@ -5,7 +5,7 @@
 This module provides a [Pony](https://www.ponylang.io/) package for parsing
 and generating [UUIDs](https://tools.ietf.org/html/rfc4122).
 
-This code is basically a direct port of [Google's `uuid` package for Go](https://godoc.org/).
+This code is basically a direct port of [Google's `uuid` package for Go](https://github.com/google/uuid).
 
 Pony-UUID does not support generating UUIDs of versions 1 and 2 at this point.
 
