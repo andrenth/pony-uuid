@@ -1,7 +1,7 @@
 use "debug"
 use "collections"
 use "ponytest"
-use uuid = "../../uuid"
+use uuid = "../uuid"
 
 actor Main is TestList
   new create(env: Env) =>
