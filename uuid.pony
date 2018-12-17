@@ -301,7 +301,6 @@ primitive Parse
         | 45 => return InvalidPrefix
         // {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
         | 38 if (s(0)? == '{') and (s(37)? == '}') => s.trim(1, 37)
-        | 38 => return InvalidFormat
         // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         | 32 =>
           let range = Range(0, Size())
