@@ -242,16 +242,10 @@ primitive _FromArray
 
 type Version is U8
 
-type Variant is (Invalid | RFC4122 | Reserved | Microsoft | Future)
+type Variant is (RFC4122 | Reserved | Microsoft | Future)
   """
   The variant determines how the remaining fields of the UUID are interpreted.
   """
-
-primitive Invalid
-  """
-  The UUID is invalid.
-  """
-  fun string(): String iso^ => "Invalid".clone()
 
 primitive RFC4122
   """
