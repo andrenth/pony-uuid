@@ -48,24 +48,6 @@ class val UUID is Equatable[UUID]
     """
     _bytes = _create_v4(consume rand)
 
-  fun tag _create_v4(rand: (Random iso | None)): Array[U8] val =>
-    let rng =
-      match consume rand
-      | let r: Random => r
-      else
-        let now = Time.now()
-        Rand(now._1.u64(), now._2.u64())
-      end
-    let bytes = recover Array[U8](Size()) end
-    for i in Range(0, Size()) do
-      bytes.push(rng.u8())
-    end
-    try
-      bytes(6)? = (bytes(6)? and 0x0f) or 0x40
-      bytes(8)? = (bytes(8)? and 0x3f) or 0x90
-    end
-    consume bytes
-
   new val v5(namespace: Namespace, data: Array[U8] val) =>
     """
     Creates a version 5 UUID (SHA1) with the supplied namespace and data.
@@ -156,6 +138,28 @@ class val UUID is Equatable[UUID]
   fun hash64(): U64 =>
     let p = _bytes.cpointer()
     @ponyint_hash_block64[U64](p, Size())
+
+  fun tag _create_v4(rand: (Random iso | None)): Array[U8] val =>
+    let rng =
+      match consume rand
+      | let r: Random => r
+      else
+        let now = Time.now()
+        Rand(now._1.u64(), now._2.u64())
+      end
+    let size = Size()
+    let bytes = recover Array[U8](size) end
+    let r = rng.u128()
+    let shift = (size - 1) << 3
+    for i in Range(0, size) do
+      let b = (r >> (shift - (i << 3)).u128()) and 0xff
+      bytes.push(b.u8())
+    end
+    try
+      bytes(6)? = (bytes(6)? and 0x0f) or 0x40
+      bytes(8)? = (bytes(8)? and 0x3f) or 0x90
+    end
+    consume bytes
 
   fun tag _hash(fn: HashFn val, namespace: Namespace, data: Array[U8] val,
                 ver: U8): Array[U8] val =>
