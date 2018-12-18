@@ -312,7 +312,7 @@ primitive Parse
         // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         | 32 =>
           let range = Range(0, Size())
-          let iter = Iter[USize](range).map[(USize, USize)]({(i) => (i, i*2)})
+          let iter = Iter[USize](range).map[USize]({(i) => i * 2})
           return _make_bytes(s, iter)?
         else
           return InvalidLength
@@ -326,16 +326,16 @@ primitive Parse
       end
       let positions: Array[USize] =
         [ 0; 2; 4; 6; 9; 11; 14; 16; 19; 21; 24; 26; 28; 30; 32; 34 ]
-      _make_bytes(t, positions.pairs())?
+      _make_bytes(t, positions.values())?
     else
       InvalidFormat
     end
 
-  fun _make_bytes(s: String, iter: Iterator[(USize, USize)]): UUID ? =>
+  fun _make_bytes(s: String, iter: Iterator[USize]): UUID ? =>
     let bytes = recover Array[U8](Size()) end
-    for (i, j) in iter do
-      let b1 = s(j)?
-      let b2 = s(j + 1)?
+    for i in iter do
+      let b1 = s(i)?
+      let b2 = s(i + 1)?
       let byte = _chars_to_byte(b1, b2)?
       bytes.push(byte)
     end
