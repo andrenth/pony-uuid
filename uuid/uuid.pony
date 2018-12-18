@@ -27,6 +27,12 @@ class val UUID is Equatable[UUID]
   """
   let _bytes: Array[U8] val
 
+  new val create(rand: (Random iso | None) = None) =>
+    """
+    Creates a random UUID. This is an alias for the `v4` constructor.
+    """
+    _bytes = _create_v4(consume rand)
+
   new val v3(namespace: Namespace, data: Array[U8] val) =>
     """
     Creates a version 3 UUID (MD5) with the supplied namespace and data.
@@ -40,6 +46,9 @@ class val UUID is Equatable[UUID]
     as an argument. Otherwise, [Rand](https://stdlib.ponylang.io/random-Rand/)
     will be used, seeded from the current time.
     """
+    _bytes = _create_v4(consume rand)
+
+  fun tag _create_v4(rand: (Random iso | None)): Array[U8] val =>
     let rng =
       match consume rand
       | let r: Random => r
@@ -55,7 +64,7 @@ class val UUID is Equatable[UUID]
       bytes(6)? = (bytes(6)? and 0x0f) or 0x40
       bytes(8)? = (bytes(8)? and 0x3f) or 0x90
     end
-    _bytes = consume bytes
+    consume bytes
 
   new val v5(namespace: Namespace, data: Array[U8] val) =>
     """
