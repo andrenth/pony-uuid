@@ -163,13 +163,14 @@ class val UUID is Equatable[UUID]
 
   fun tag _hash(fn: HashFn val, namespace: Namespace, data: Array[U8] val,
                 ver: U8): Array[U8] val =>
+    let size = Size()
     let d = recover val
-      let d = Array[U8](Size() + data.size())
+      let d = Array[U8](size + data.size())
       d.append(namespace().array())
       d.append(data)
       d
     end
-    let bytes = recover fn(d).slice(0, Size()) end
+    let bytes = recover fn(d).slice(0, size) end
     try
       bytes(6)? = (bytes(6)? and 0x0f) or (ver << 4)
       bytes(8)? = (bytes(8)? and 0x3f) or 0x80
